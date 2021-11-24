@@ -8,11 +8,8 @@ public class Main {
     private static String[] gameArray;
 
     public static void main(String[] args) {
-        setup();
-        //make a setup method or move code
-        //add an array size int and a player names string
-        int numOfPlayers = setupPlayerNum()
-        gameloop(numOfPlayers, arraySize, setupNames(numOfPlayers));
+        int numOfPlayers = setupPlayerNum();
+        gameloop(numOfPlayers, arraySize(), setupNames(numOfPlayers));
 
         printArray(gameArray);
     }
@@ -23,7 +20,7 @@ public class Main {
 
     }
 
-    public static String[] setupNames(int numberOfPlayers){
+    public static String[] setupNames(int numOfPlayers){
 
         String[] playerNames = new String[numOfPlayers];
         for (int i = 1; i <= numOfPlayers; i++) {
@@ -32,10 +29,13 @@ public class Main {
         }
         return playerNames;
     }
-    /*
+
+    public static int arraySize(){
         System.out.println("How big is the array going to be?");
-        int arraySize = input.nextInt();
-        gameArray = new String[arraySize];*/
+        int arraySize = Integer.parseInt(getInput());
+        gameArray = new String[arraySize];
+        return arraySize;
+    }
 
     public static String getInput(){
         Scanner input = new Scanner(System.in);
@@ -43,18 +43,39 @@ public class Main {
     }
 
     public static void gameloop(int numOfPlayers, int arraySize, String[] playerNames){
-        Random random = new Random();
         int totalGuesses = 0;
         int currentPlayer = 0;
         while ((arraySize - totalGuesses - numOfPlayers) > 0) {
             if (currentPlayer == numOfPlayers+1){
+                System.out.println("It's the computer's turn!");
+                makeGuess(computerGuess(arraySize), "Computer");
+                System.out.println("The computer has made its guess.");
+                totalGuesses++;
                 currentPlayer = 0;
-            }//finish code
+            }else{
+                currentPlayer++;
+                System.out.println("It's " + playerNames[currentPlayer-1] + "'s turn!\nPlease make your guess:");
+                int playerGuess = Integer.parseInt(getInput());
+                makeGuess(playerGuess, playerNames[currentPlayer-1]);
+                totalGuesses++;
+                clearConsole();
+            }
         }
     }
 
     public static void clearConsole(){ //this is done to try to prevent cheating
         System.out.println("\n\n\n\n\n\n\n\n");
+    }
+
+    public static int computerGuess(int arraySize){
+        Random random = new Random();
+        return random.nextInt(arraySize);
+    }
+
+    public static void makeGuess(int guess, String playerName){
+        if(gameArray[guess-1] == null){
+            gameArray[guess-1] = playerName;
+        }
     }
 
     public static void printArray(String[] array){
@@ -65,5 +86,5 @@ public class Main {
                 System.out.println(name);
             }
         }
-    }//add more try catches
+    }
 }
